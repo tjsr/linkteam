@@ -3,7 +3,7 @@
 import { callNpmLink, getGlobalNpmModules } from "./npm.js";
 
 import { getMatchedModules } from "./matchModules.js";
-import { getVersionFromPackageJson } from "getVersionFromPackageJson.js";
+import { getVersionFromPackageJson } from "./getVersionFromPackageJson.js";
 import { program } from "commander";
 
 const linkIntentMessage = (owner: string|undefined, pattern: string|undefined, exclude: string|undefined): string => {

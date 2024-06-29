@@ -1,6 +1,6 @@
 import fs, { PathLike } from "fs";
 
-import { findPackageJson } from "findPackageJson.js";
+import { findPackageJson } from "./findPackageJson.js";
 
 export const getVersionFromPackageJson = async (packageJsonPath?: PathLike|undefined): Promise<string> => {
   if (!packageJsonPath) {
