@@ -4,8 +4,8 @@ export type CheckedModule = { resolved: string|undefined };
 
 export const getMatchedModules = (
   modules: object,
-  pattern: string|undefined,
-  owner: string|undefined,
+  patterns: string[]|undefined,
+  owners: string[]|undefined,
   _exclude: string|undefined
 ): string[] => {
   const matchedLinkedModules: string[] = Array.from(Object.keys(modules))
@@ -14,7 +14,7 @@ export const getMatchedModules = (
       const module: CheckedModule = (modules as Record<string, any>)[key] as CheckedModule;
 
       return isLinkedModule(module) &&
-        includeModule(key, owner, pattern);
+        includeModule(key, owners, patterns);
     });
 
   return matchedLinkedModules;
