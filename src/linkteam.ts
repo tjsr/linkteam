@@ -4,6 +4,7 @@ import { callNpmLink, getGlobalNpmModules } from "./npm.js";
 
 import { getMatchedModules } from "./matchModules.js";
 import { program } from "commander";
+import { version } from '../package.json';
 
 const linkIntentMessage = (owner: string|undefined, pattern: string|undefined, exclude: string|undefined): string => {
   let linkedPackageMessage = 'Linking all packages';
@@ -20,7 +21,7 @@ const linkIntentMessage = (owner: string|undefined, pattern: string|undefined, e
 };
 
 program
-  .version("0.0.1", '-v, --version', 'Output the current version')
+  .version(version, '-v, --version', 'Output the current version')
   .description("Link node_modules based on patterns or owners")
   .argument("[pattern]", "glob pattern to match package names")
   .option("-o, --owner [...<organisation>]", "Owner of the packge")
