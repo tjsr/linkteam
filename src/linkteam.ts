@@ -28,7 +28,12 @@ program
   .argument("[pattern]", "glob pattern to match package names")
   .option("-o, --owner [...<organisation>]", "Owner of the packge")
   .option("-e, --exclude <string>", "Exclude packages that match this pattern")
-  .action(async (pattern, options, _command) => {    
+  .option('--verbose', 'Output verbose messages')
+  .action(async (pattern, options, _command) => {
+    if (!options.verbose) {
+      console.debug = () => {};
+    }
+    console.debug('Running with options:', options);
     if (!pattern && !options?.owner) {
       console.log(program.description());
       program.outputHelp();
@@ -40,10 +45,12 @@ program
     const modules = getGlobalNpmModules();
     const matchedLinkedModules: string[] = getMatchedModules(modules, pattern, options?.owner, options?.exclude);
 
+    console.log('Finished matching modules to params:', matchedLinkedModules?.length);
     if (matchedLinkedModules?.length === 0) {
       program.error('No linked modules found to link matching inputs.');
       return;
     }
+
     callNpmLink(matchedLinkedModules);
     console.log('Linked packages ' + matchedLinkedModules.join(', ') + ' successfully');
   });
