@@ -8,7 +8,19 @@ symlinks or junctions will be symlinked to the local `node_modules` directory.
 This allows you to run a single command as a postinstall hook to re-link any overwritten virtual directories
 during the `npm install` process.
 
+## Installation
+
+### Install globally
+
+You can either install this in a project or globally with `npm i -g linkteam`.  Alternatively, you could use `npx linkteam [opts]`
+
+### Project usage
+
+Install in to a project as a dev dependency using `npm install --save-dev linkteam` or `npm i -D linkteam`.  This allows `linkteam` to be called from npm scripts.
+
 ## Usage
+
+
 
 `linkteam -o @tjsr` will link all projects in the `@tjsr` namespace that use juntions, ie, have had `npm link` run in the project.
 
