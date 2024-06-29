@@ -1,0 +1,4 @@
+*.tgz
+build/**/*
+.github
+vitest.config.ts.timestamp-*
