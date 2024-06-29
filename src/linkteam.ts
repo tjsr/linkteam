@@ -3,8 +3,8 @@
 import { callNpmLink, getGlobalNpmModules } from "./npm.js";
 
 import { getMatchedModules } from "./matchModules.js";
+import { getVersionFromPackageJson } from "getVersionFromPackageJson.js";
 import { program } from "commander";
-import { version } from '../package.json';
 
 const linkIntentMessage = (owner: string|undefined, pattern: string|undefined, exclude: string|undefined): string => {
   let linkedPackageMessage = 'Linking all packages';
@@ -19,6 +19,8 @@ const linkIntentMessage = (owner: string|undefined, pattern: string|undefined, e
   }
   return linkedPackageMessage;
 };
+
+const version = await getVersionFromPackageJson();
 
 program
   .version(version, '-v, --version', 'Output the current version')
