@@ -1,11 +1,13 @@
 {
   "name": "linkteam",
-  "version": "0.0.3",
+  "version": "0.0.11",
   "description": "Devlinks - an npm symlink and junction tool to automate use of the npm link command in projects.",
-  "main": "dist/esm/linkteam.js",
-  "module": "dist/esm/linkteam.js",
-  "types": "dist/esm/linkteam.d.ts",
-  "bin": "dist/esm/linkteam.js",
+  "main": "./dist/esm/linkteam.js",
+  "module": "./dist/esm/linkteam.js",
+  "types": "./dist/esm/linkteam.d.ts",
+  "bin": {
+    "linkteam": "dist/esm/linkteam.js"
+  },
   "type": "module",
   "exports": {
     "import": "./dist/esm/linkteam.js"

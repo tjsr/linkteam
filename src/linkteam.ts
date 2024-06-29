@@ -3,15 +3,20 @@
 import { callNpmLink, getGlobalNpmModules } from "./npm.js";
 
 import { getMatchedModules } from "./matchModules.js";
+import { getVersionFromPackageJson } from "./getVersionFromPackageJson.js";
 import { program } from "commander";
 
-const linkIntentMessage = (owner: string|undefined, pattern: string|undefined, exclude: string|undefined): string => {
+const linkIntentMessage = (
+  owners: string[]|undefined,
+  patterns: string[]|undefined,
+  exclude: string|undefined
+): string => {
   let linkedPackageMessage = 'Linking all packages';
-  if (owner) {
-    linkedPackageMessage = linkedPackageMessage + ' for owner ' + owner;
+  if (owners) {
+    linkedPackageMessage = linkedPackageMessage + ' for owners ' + owners.join(', ');
   }
-  if (pattern) {
-    linkedPackageMessage = linkedPackageMessage + ' matching pattern ' + pattern;
+  if (patterns) {
+    linkedPackageMessage = linkedPackageMessage + ' matching patterns ' + patterns.join(', ');
   }
   if (exclude) {
     linkedPackageMessage = linkedPackageMessage + ' excluding ' + exclude;
@@ -19,28 +24,55 @@ const linkIntentMessage = (owner: string|undefined, pattern: string|undefined, e
   return linkedPackageMessage;
 };
 
+const version = await getVersionFromPackageJson();
+
+const validateOwners = (owner: string): void => {
+  if (owner !== undefined && owner.indexOf('/') > -1) {
+    throw new Error('Owner cannot contain /');
+  }
+};
+
+const ownerList = (values: string): string[] => {
+  const owners = values.split(',');
+  owners.forEach(validateOwners);
+  return owners;
+};
+
+const patternList = (values: string): string[] => {
+  return values.split(',');
+};
+
 program
-  .version("0.0.1", '-v, --version', 'Output the current version')
+  .version(version, '-v, --version', 'Output the current version')
   .description("Link node_modules based on patterns or owners")
-  .argument("[pattern]", "glob pattern to match package names")
-  .option("-o, --owner [...<organisation>]", "Owner of the packge")
+  .argument("[pattern]", "glob pattern to match package names", patternList)
+  .option("-o, --owner <organisation...>", "Owner of the packge", ownerList)
   .option("-e, --exclude <string>", "Exclude packages that match this pattern")
-  .action(async (pattern, options, _command) => {    
+  .option('--verbose', 'Output verbose messages')
+  .action(async (pattern: string[], options, _command) => {
+    if (!options.verbose) {
+      console.debug = () => {};
+    }
+    console.debug('Running with options:', options);
     if (!pattern && !options?.owner) {
       console.log(program.description());
       program.outputHelp();
     }
 
-    const linkedPackageMessage = linkIntentMessage(options?.owner, pattern, options?.exclude);
+    const owner: string[] = options?.owner;
+
+    const linkedPackageMessage = linkIntentMessage(owner, pattern, options?.exclude);
     console.log(linkedPackageMessage);
 
     const modules = getGlobalNpmModules();
-    const matchedLinkedModules: string[] = getMatchedModules(modules, pattern, options?.owner, options?.exclude);
+    const matchedLinkedModules: string[] = getMatchedModules(modules, pattern, owner, options?.exclude);
 
+    console.debug('Finished matching modules to params:', matchedLinkedModules?.length);
     if (matchedLinkedModules?.length === 0) {
       program.error('No linked modules found to link matching inputs.');
       return;
     }
+
     callNpmLink(matchedLinkedModules);
     console.log('Linked packages ' + matchedLinkedModules.join(', ') + ' successfully');
   });
