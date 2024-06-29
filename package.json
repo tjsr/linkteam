@@ -5,7 +5,9 @@
   "main": "dist/esm/linkteam.js",
   "module": "dist/esm/linkteam.js",
   "types": "dist/esm/linkteam.d.ts",
-  "bin": "dist/esm/linkteam.js",
+  "bin": {
+    "linkteam": "dist/esm/linkteam.js"
+  },
   "type": "module",
   "exports": {
     "import": "./dist/esm/linkteam.js"
