@@ -43,18 +43,17 @@
   "homepage": "https://github.com/tjsr/devlinks#readme",
   "devDependencies": {
     "@tjsr/eslint-config": "github:tjsr/eslint-config#main",
-    "@types/commander": "^2.12.2",
     "@types/minimatch": "^5.1.2",
     "@types/node": "^20.14.2",
     "eslint": "^8.57.0",
+    "rimraf": "^5.0.7",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.14.1",
     "vitest": "^1.6.0"
   },
   "overrides": {
     "flat-cache": "^5.0.0",
-    "file-entry-cache": "^6.0.1",
-    "rimraf": "^5.0.7"
+    "file-entry-cache": "^6.0.1"
   },
   "optionalDependencies": {
     "nodemon": "^3.1.3"
