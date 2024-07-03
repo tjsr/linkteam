@@ -1,4 +1,4 @@
-import { hasOwner, includeModule, isLinkedModule, matchingPackage } from "./checks.js";
+import { includeModule, isLinkedModule, matchesOwner, packageNameMatchesPattern } from "./checks.js";
 
 describe('isLinkedModule', () => {
   test('returns true if module is linked', () => {
@@ -12,42 +12,44 @@ describe('isLinkedModule', () => {
 
 describe('matchingPackage', () => {
   test('returns true if module matches simple string', () => {
-    expect(matchingPackage('module', 'module')).toBe(true);
+    expect(packageNameMatchesPattern('module', 'module')).toBe(true);
   });
 
   test('returns true if module matches a glob', () => {
-    expect(matchingPackage('@experimental/something-here-updated', '@experimental/*')).toBe(true);
-    expect(matchingPackage('@experimental/something-here-updated', '@experimental/something-*-updated')).toBe(true);
-    expect(matchingPackage('@experimental/something-here-updated', '@experimental/*-updated')).toBe(true);
+    expect(packageNameMatchesPattern('@experimental/something-here-updated', '@experimental/*')).toBe(true);
+    expect(packageNameMatchesPattern('@experimental/something-here-updated', '@experimental/something-*-updated'))
+      .toBe(true);
+    expect(packageNameMatchesPattern('@experimental/something-here-updated', '@experimental/*-updated')).toBe(true);
   });
 
   test('returns false if module does not match string', () => {
-    expect(matchingPackage('module', 'nomatch')).toBe(false);
+    expect(packageNameMatchesPattern('module', 'nomatch')).toBe(false);
   });
 
   test('returns true if module does not matches a glob', () => {
-    expect(matchingPackage('@foo/something-here-updated', '@experimental/*')).toBe(false);
-    expect(matchingPackage('@experimental/something-here-updated', '@experimental/something-else-*')).toBe(false);
-    expect(matchingPackage('@experimental/something-here-original', '*-updated')).toBe(false);
+    expect(packageNameMatchesPattern('@foo/something-here-updated', '@experimental/*')).toBe(false);
+    expect(packageNameMatchesPattern('@experimental/something-here-updated', '@experimental/something-else-*'))
+      .toBe(false);
+    expect(packageNameMatchesPattern('@experimental/something-here-original', '*-updated')).toBe(false);
   });
 
   test('returns true if pattern is undefined', () => {
-    expect(matchingPackage('module', undefined)).toBe(true);
+    expect(packageNameMatchesPattern('module', undefined)).toBe(true);
   });
 });
 
 describe('hasOwner', () => {
   test('Should match for an owner with an @ symbol', () => {
-    expect(hasOwner('@owner/module', '@owner')).toBe(true);
+    expect(matchesOwner('@owner/module', '@owner')).toBe(true);
   });
 
   test('Should not match for an owner when @ is omitted', () => {
-    expect(hasOwner('@someorg/module', 'someorg')).toBe(false);
+    expect(matchesOwner('@someorg/module', 'someorg')).toBe(false);
   });
 
   test('Should not match for orgs', () => {
-    expect(hasOwner('@someorg/module', 'something')).toBe(false);
-    expect(hasOwner('@corp/module', '@another')).toBe(false);
+    expect(matchesOwner('@someorg/module', 'something')).toBe(false);
+    expect(matchesOwner('@corp/module', '@another')).toBe(false);
   });
 });
 
