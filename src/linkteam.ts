@@ -4,13 +4,13 @@ import {
   NpmModule,
   callNpmLink,
   getGlobalNpmModules,
-  getNameFromNpmShow,
-  getNpmModules
+  getNpmModules,
+  getProdNpmModules
 } from "./npm.js";
 
 import { getVersionFromPackageJson } from "./getVersionFromPackageJson.js";
-import { hasMatchParams } from "params.js";
-import { includeModule } from "checks.js";
+import { hasMatchParams } from "./params.js";
+import { includeModule } from "./checks.js";
 import { program } from "commander";
 
 const linkIntentMessage = (
@@ -58,18 +58,8 @@ const patternList = (values: string): string[] => {
   return values.split(',');
 };
 
-const getModulesForProject = (currentPackage: string, devOnly: boolean, excludeDev: boolean): NpmModule[] => {
-  // const currentPackage: string = getNameFromNpmShow();
-  let projectModules: NpmModule[] = getNpmModules();
-  projectModules.forEach((module: NpmModule) => {
-    if (module.name === currentPackage) {
-      module.isCurrentProject = true;
-    }
-  });
-
-  projectModules = projectModules.filter((module: NpmModule) =>
-    (devOnly && module.isDevDependency) || (excludeDev && module.isDevDependency));
-
+const getModulesForProject = async (devOnly: boolean, excludeDev: boolean): Promise<NpmModule[]> => {
+  const projectModules: Promise<NpmModule[]> = excludeDev ? getProdNpmModules() : getNpmModules(devOnly);
   return projectModules;
 };
 
@@ -95,17 +85,25 @@ program
 
     const owners: string[] = options?.owner;
 
-    const currentPackage: string = getNameFromNpmShow();
-    const projectModules: NpmModule[] = getModulesForProject(currentPackage, options?.devOnly, options?.excludeDev);
+    const projectModules: NpmModule[] = await getModulesForProject(options?.devOnly, options?.excludeDev);
 
-    const modules: NpmModule[] = getGlobalNpmModules();
+    if (projectModules.length === 0) {
+      program.error('Error: No modules found in project');
+      return;
+    }
+
+    const modules: NpmModule[] = await getGlobalNpmModules();
     const globalLinkedModules = modules.filter((module: NpmModule) => module.hasGlobalLink);
     const maxModuleNameLength: number = Math.max(...globalLinkedModules.map((module: NpmModule) => module.name.length));
     
     const projectModuleNames: string[] = projectModules.map((module: NpmModule) => module.name);
+
     if (options?.show) {
+      console.log('Project modules:', projectModuleNames.join(', '));
       const linkedPackageMessage = linkIntentMessage(owners, pattern, options?.exclude);
-      console.log('Linking modules:', linkedPackageMessage);
+      console.log(linkedPackageMessage);
+
+      console.log('The following modules are installed in the global npm node_modules and are linked to local copies:');
       globalLinkedModules.forEach((currentModule: NpmModule) => {
         const usageString = currentModule.isCurrentProject ? 'Excluded'
           : projectModuleNames.includes(currentModule.name) ? 'Referenced' : 'Not used';
@@ -115,20 +113,29 @@ program
 
     const linkedModulesInProject = globalLinkedModules.filter(
       (module: NpmModule) => projectModuleNames.includes(module.name));
-    console.debug('Linked in project: ', projectModuleNames, globalLinkedModules, linkedModulesInProject);
+    console.debug('Linked in project: ', projectModuleNames);
+    console.debug('Linked global modules: ', globalLinkedModules);
+    console.debug('Linked modules in project: ', linkedModulesInProject);
     const matchedLinkedModules: NpmModule[] = linkedModulesInProject.filter(
       (module: NpmModule) => module.hasGlobalLink && includeModule(module.name, owners, options.patterns)
     );
 
-    console.debug('Finished matching modules to params:', matchedLinkedModules?.length);
     if (matchedLinkedModules?.length === 0) {
-      program.error('No linked modules found to link matching inputs.');
+      if (hasMatchParams(pattern, owners, options?.exclude)) {
+        program.error('No search parameters found, but no globally linked modules were found in project.');
+      } else {
+        program.error('No modules used by project were found having globally linked modules and matching inputs.');
+      }
       return;
     }
 
     callNpmLink(matchedLinkedModules);
     if (hasMatchParams(pattern, owners, options?.exclude)) {
-      console.log('Linked packages ' + matchedLinkedModules.join(', ') + ' successfully');
+      console.log(`Linked ${matchedLinkedModules?.length} packages ${matchedLinkedModules.map(
+        (module) => module.name).join(', ')} matching input params.`);
+    } else {
+      console.log(`Linked ${matchedLinkedModules?.length} packages ${matchedLinkedModules.map(
+        (module) => module.name).join(', ')} from project.`);  
     }
   }); 
 
