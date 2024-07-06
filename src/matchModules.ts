@@ -1,9 +1,13 @@
 import { includeModule, isLinkedModule } from "./checks.js";
 
-export type CheckedModule = { resolved: string|undefined };
+export type CheckedModule = {
+  overridden: boolean;
+  resolved: string|undefined;
+  version: string|undefined;
+};
 
-export const getMatchedModules = (
-  modules: object,
+export const getMatchedModulesFromDependencies = (
+  modules: Record<string, CheckedModule>,
   patterns: string[]|undefined,
   owners: string[]|undefined,
   _exclude: string|undefined
@@ -16,6 +20,18 @@ export const getMatchedModules = (
       return isLinkedModule(module) &&
         includeModule(key, owners, patterns);
     });
+
+  return matchedLinkedModules;
+};
+
+export const getMatchedModules = (
+  moduleNames: string[],
+  patterns: string[]|undefined,
+  owners: string[]|undefined,
+  _exclude: string|undefined
+): string[] => {
+  const matchedLinkedModules: string[] = moduleNames
+    .filter((key: string) => includeModule(key, owners, patterns));
 
   return matchedLinkedModules;
 };

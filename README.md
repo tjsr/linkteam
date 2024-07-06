@@ -20,10 +20,11 @@ Install in to a project as a dev dependency using `npm install --save-dev linkte
 
 ## Usage
 
-
+`linkteam` will look at all packages referenced by `package.json` and link any which have junctions/symlinks in the global node_modules.
 
 `linkteam -o @tjsr` will link all projects in the `@tjsr` namespace that use juntions, ie, have had `npm link` run in the project.
 
+TODO: Currently broken. Needs fixing.
 `linkteam @tjsr/*` would do the same, using a glob-match pattern to call `npm link $` on all matching junctioned node_modules.
 
 ## Building

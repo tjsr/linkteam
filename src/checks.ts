@@ -1,6 +1,7 @@
+import { hasValue } from "./params.js";
 import { minimatch } from "minimatch";
 
-export const hasOwner = (module: string, owners: string|string[]): boolean => {
+export const matchesOwner = (module: string, owners: string|string[]|undefined): boolean => {
   if (typeof owners === 'string') {
     owners = [owners];
   }
@@ -9,17 +10,17 @@ export const hasOwner = (module: string, owners: string|string[]): boolean => {
   ).length > 0;
 };
 
-export const matchingAnyPackage = (module: string, pattern: string|string[]|undefined): boolean => {
+export const packageNameMatchesAnyPattern = (module: string, pattern: string|string[]|undefined): boolean => {
   if (typeof pattern === 'string') {
-    return matchingPackage(module, pattern);
+    return packageNameMatchesPattern(module, pattern);
   }
   if (pattern === undefined) {
     return true;
   }
-  return pattern.filter((p: string) => matchingPackage(module, p)).length > 0;
+  return pattern.filter((p: string) => packageNameMatchesPattern(module, p)).length > 0;
 };
 
-export const matchingPackage = (module: string, pattern: string|undefined): boolean => {
+export const packageNameMatchesPattern = (module: string, pattern: string|undefined): boolean => {
   return pattern === undefined || minimatch(module, pattern);
 };
 
@@ -32,27 +33,17 @@ export const includeModule = (
   owners: string|string[]|undefined,
   patterns: string|string[]|undefined
 ): boolean => {
-  if (typeof owners === 'string') {
-    owners = [owners];
+  const hasPattern = hasValue(patterns);
+  if (hasPattern && packageNameMatchesAnyPattern(moduleName, patterns)) {
+    return true;
   }
-  if (typeof patterns === 'string') {
-    patterns = [patterns];
+  
+  const hasOwner = hasValue(owners);
+  if (hasOwner && matchesOwner(moduleName, owners)) {
+    return true;
   }
 
-  if (patterns && patterns.length > 0) {
-    try {
-      if (matchingAnyPackage(moduleName, patterns)) {
-        return true;
-      }
-    } catch (err) {
-      console.error('Error matching package', moduleName, patterns);
-      throw err;
-    }
-  }
-  if (owners && owners.length > 0) {
-    return hasOwner(moduleName, owners);
-  }
-  if ((!patterns || patterns.length === 0) && (!owners || owners?.length === 0)) {
+  if (!hasPattern && !hasOwner) {
     return true;
   }
   return false;
