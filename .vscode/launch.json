@@ -1,0 +1,29 @@
+{
+  "configurations": [
+  {
+    "name": "Launch Program",
+    "request": "launch",
+    "skipFiles": [
+      "<node_internals>/**"
+    ],
+    "type": "node",
+    "console": "integratedTerminal",
+    "internalConsoleOptions": "openOnSessionStart",
+    "runtimeExecutable": "node",
+    "args": [
+      "--inspect=9239",
+      "--loader", "ts-node/esm",
+      "${workspaceFolder}/src/linkteam.ts"
+    ]
+  },
+  {
+    "name": "Attach to Node Process",
+    "type": "node",
+    "request": "attach",
+    "port": 9239,
+    "skipFiles": [
+      "<node_internals>/**"
+    ]
+  }
+  ]
+}
