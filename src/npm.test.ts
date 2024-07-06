@@ -12,7 +12,6 @@ const expectModuleNotPresent = (modules: NpmModule[], name: string) => {
 };
 
 describe('getProdNpmModules', () => {
-
   it('should return an array of NpmModule objects with isDevDependency set to false', async () => {
     const packageModules = await getProdNpmModules();
     expect(packageModules).toBeTruthy();

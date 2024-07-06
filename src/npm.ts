@@ -1,6 +1,6 @@
-import { exec, execSync } from "child_process";
-
 import { CheckedModule } from "./matchModules.js";
+import { execSync } from "child_process";
+import { getCommandOutputPromise } from "./execUtils.js";
 import { isLinkedModule } from "./checks.js";
 import v8 from 'v8';
 
@@ -27,33 +27,9 @@ export const getNameFromNpmPkg = (): string => {
   return packageString;
 };
 
-const getNpmModulesFromCommand = async (command: string, throwOnError: boolean = false): Promise<NpmModule[]> => {
-  let jsonString;
+const getNpmModulesFromCommand = async (command: string): Promise<NpmModule[]> => {
+  const jsonString = await getCommandOutputPromise(command, false);
 
-  try {
-    console.debug(`Running \`${command}\``);
-
-    const dataPromise = new Promise<string>((resolve, reject) => {
-      exec(command, (err, stdout, stderr) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let storedError: unknown|undefined;
-
-        if (err?.code && throwOnError) {
-          (storedError as any).stdoutData = stdout.toString();
-          console.error(stderr.toString());
-          reject(storedError);
-        } else {
-          resolve(stdout.toString());
-        }
-      });
-    });
-    
-    jsonString = await dataPromise;
-  } catch (err: unknown) {
-    console.error(`Error calling \`${command}\``, err);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    jsonString = (err as any).stdoutData;
-  }
   try {
     const json = JSON.parse(jsonString);
     const jsonSize = estimateObjectSize(json);
