@@ -7,8 +7,8 @@ import {
   getNpmModules,
   getProdNpmModules
 } from "./npm.js";
+import { findPackageJson, getVersionFromPackageJson } from "@tjsr/package-json-utils";
 
-import { getVersionFromPackageJson } from "@tjsr/package-json-utils";
 import { hasMatchParams } from "./params.js";
 import { includeModule } from "./checks.js";
 import { program } from "commander";
@@ -40,7 +40,8 @@ const linkIntentMessage = (
   return linkedPackageMessage;
 };
 
-const version = await getVersionFromPackageJson();
+const packageJsonPath = findPackageJson(import.meta.dirname);
+const version = await getVersionFromPackageJson(packageJsonPath);
 
 const validateOwners = (owner: string): void => {
   if (owner !== undefined && owner.indexOf('/') > -1) {
