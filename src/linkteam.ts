@@ -8,7 +8,7 @@ import {
   getProdNpmModules
 } from "./npm.js";
 
-import { getVersionFromPackageJson } from "./getVersionFromPackageJson.js";
+import { getVersionFromPackageJson } from "@tjsr/package-json-utils";
 import { hasMatchParams } from "./params.js";
 import { includeModule } from "./checks.js";
 import { program } from "commander";
