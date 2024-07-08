@@ -22,12 +22,13 @@ describe('getProdNpmModules', () => {
   });
 
   it('Should have commander, minimatch and nodemon as the only dependencies', async () => {
+    const expectedDeps = ['commander', 'minimatch', 'nodemon', '@tjsr/package-json-utils'];
     const packageModules = await getProdNpmModules();
-    expect(packageModules.length).toBe(3);
+    expect(packageModules.length).toBe(expectedDeps.length);
 
-    expectModule(packageModules, 'commander');
-    expectModule(packageModules, 'minimatch');
-    expectModule(packageModules, 'nodemon');
+    expectedDeps.forEach((dep) => {
+      expectModule(packageModules, dep);
+    });
   });
 });
 
