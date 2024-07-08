@@ -7,6 +7,7 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'json', 'html'],
     },
+    setupFiles: ['./src/setup-tests.ts'],
     globals: true,
     testTimeout: (process.env['VITEST_VSCODE'] !== undefined ? 120 : 3) * 1000,
   },
