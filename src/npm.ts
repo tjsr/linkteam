@@ -30,6 +30,14 @@ export const getNameFromNpmPkg = (): string => {
 const getNpmModulesFromCommand = async (command: string): Promise<NpmModule[]> => {
   const jsonString = await getCommandOutputPromise(command, false);
 
+  if (jsonString === undefined) {
+    throw new Error(`undefined JSON returned from command ${command}`);
+  } else if (jsonString === null) {
+    throw new Error(`null JSON returned from command ${command}`);
+  } else if (jsonString === "") {
+    throw new Error(`empty JSON returned from command ${command}`);
+  }
+
   try {
     const json = JSON.parse(jsonString);
     const jsonSize = estimateObjectSize(json);
