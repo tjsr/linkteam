@@ -41,12 +41,16 @@ const getNpmModulesFromCommand = async (command: string): Promise<NpmModule[]> =
   try {
     const json = JSON.parse(jsonString);
     const jsonSize = estimateObjectSize(json);
-    console.debug(`Returned \`${command}\` json object of ${jsonSize} bytes.`);
-  
-    delete json.dependencies[json.name];
-    const modules = getModuleDetails(json.dependencies);
-  
-    return modules;
+    
+    if (json.dependencies) {
+      console.debug(`Returned \`${command}\` json object of ${jsonSize} bytes.`);
+      delete json.dependencies[json.name];
+      const modules = getModuleDetails(json.dependencies);
+      return modules;
+    } else {
+      console.debug(`Returned \`${command}\` json object of ${jsonSize} bytes with no dependencies returned.`);
+    }
+    return [];
   } catch (err) {
     console.error('Error parsing JSON', err);
     throw err;
