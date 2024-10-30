@@ -37,6 +37,11 @@ npm run build
 npm test
 ```
 
+## Dependabot
+
+The repo will requires an NPM_TOKEN to update npm dependencies using dependabot.  
+`gh secret set NPM_TOKEN --app dependabot --body "$NPM_TOKEN"`
+
 ## TODO
 
 - Fix help being output if junctions are found and no options are provided.
