@@ -39,6 +39,7 @@ npm test
 
 ## TODO
 
+- Fix return code of 1 when no modules were found.
 - Fix help being output if junctions are found and no options are provided.
   - ❓ Should at least one option be required?
 - Check for the existence of a .devlinks file, and read the lines from that if the file is present.

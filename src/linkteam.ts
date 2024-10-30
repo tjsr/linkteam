@@ -64,6 +64,14 @@ const getModulesForProject = async (devOnly: boolean, excludeDev: boolean): Prom
   return projectModules;
 };
 
+const infoOrError = (message: string, error: boolean): void => {
+  if (error) {
+    program.error(message);
+  } else {
+    console.log(message);
+  }
+};
+
 program
   .version(version, '-v, --version', 'Output the current version')
   .description("Link node_modules based on patterns or owners")
@@ -73,6 +81,7 @@ program
   .option("-d --devOnly", "Show only devDependencies")
   .option("-xd --excludeDev", "Exclude devDependencies")
   .option('-s --show', 'Show packages available for linking')
+  .option('-i', 'Ignore and do not error if no matching or linked modules are linked.')
   .option('--verbose', 'Output verbose messages')
   .action(async (pattern: string[], options, _command) => {
     if (!options.verbose) {
@@ -123,9 +132,11 @@ program
 
     if (matchedLinkedModules?.length === 0) {
       if (hasMatchParams(pattern, owners, options?.exclude)) {
-        program.error('No search parameters found, but no globally linked modules were found in project.');
+        infoOrError('No search parameters found, but no globally linked modules were found in project.',
+          !options?.ignore);
       } else {
-        program.error('No modules used by project were found having globally linked modules and matching inputs.');
+        infoOrError('No modules used by project were found having globally ' +
+          'linked modules and matching inputs.', !options?.ignore);
       }
       return;
     }
