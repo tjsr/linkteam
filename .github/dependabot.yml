@@ -21,6 +21,13 @@ updates:
     ignore:
       - dependency-name: '@types/node'
         update-types: ["version-update:semver-major"]
+    groups:
+      linter:
+        applies-to: version-updates
+        patterns:
+        - "@typescript-eslint/*"
+        - "eslint-*"
+        - "@tjsr/eslint-config"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
