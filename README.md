@@ -27,6 +27,16 @@ Install in to a project as a dev dependency using `npm install --save-dev linkte
 TODO: Currently broken. Needs fixing.
 `linkteam @tjsr/*` would do the same, using a glob-match pattern to call `npm link $` on all matching junctioned node_modules.
 
+## Repo configuration
+
+The workflow files for this repo require the NODE_VERSION and NPM_VERSION var to be specified.
+
+```bash
+  gh auth login
+  gh variable set NODE_VERSION -b "20.15.1"
+  gh variable set NPM_VERSION -b "10.8.2"
+```
+
 ## Building
 
 To build run
