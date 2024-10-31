@@ -1,5 +1,5 @@
 name: Build project
-run-name: ${{ github.actor }} Running build.
+run-name: Running build.
 on: [push]
 jobs:
   build:
