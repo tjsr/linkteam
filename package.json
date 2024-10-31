@@ -13,7 +13,8 @@
     "import": "./dist/esm/linkteam.js"
   },
   "scripts": {
-    "test": "npm run build && vitest --run && npm run lint",
+    "pretest": "npm run build",
+    "test": "vitest --run && npm run lint",
     "lint": "eslint --config eslint.config.mjs",
     "build": "tsc",
     "clean": "rimraf dist",
@@ -45,7 +46,7 @@
     "@tjsr/eslint-config": "github:tjsr/eslint-config#main",
     "@types/minimatch": "^5.1.2",
     "@types/node": "^20.14.2",
-    "eslint": "^8.57.0",
+    "eslint": "^9.13.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"

@@ -119,7 +119,6 @@ export const getLinkedModules = (modules: Record<string, CheckedModule>): string
   }
   const linkedModules: string[] = Array.from(Object.keys(modules))
     .filter((key: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const module: CheckedModule = (modules as Record<string, CheckedModule>)[key] as CheckedModule;
 
       return isLinkedModule(module);

@@ -6,9 +6,7 @@ export const getCommandOutputPromise = async (command: string, throwOnError: boo
   const dataPromise: Promise<string> = new Promise<string>((resolve, reject) => {
     // TODO: How on Earth are we going to test this in a way we can modck out the exec call??
     const execHandler = (err: ExecException | null, stdout: string, stderr: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (err?.code && throwOnError) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         console.error(stderr.toString());
         reject(err);
       } else {
