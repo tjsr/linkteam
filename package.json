@@ -1,6 +1,6 @@
 {
   "name": "linkteam",
-  "version": "0.0.17",
+  "version": "0.0.18-0",
   "description": "Devlinks - an npm symlink and junction tool to automate use of the npm link command in projects.",
   "main": "./dist/esm/linkteam.js",
   "module": "./dist/esm/linkteam.js",
@@ -62,5 +62,8 @@
     "@tjsr/package-json-utils": "^0.0.7",
     "commander": "^12.1.0",
     "minimatch": "^10.0.1"
-  }
+  },
+  "bundleDependencies": [
+    "@tjsr/package-json-utils"
+  ]
 }
