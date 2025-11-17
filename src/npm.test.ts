@@ -8,7 +8,7 @@ const expectModule = (modules: NpmModule[], name: string, isDevDependency: boole
 
 const expectModuleNotPresent = (modules: NpmModule[], name: string) => {
   const foundModule = modules.find((module: NpmModule) => module.name === name);
-  expect(foundModule).toBeUndefined();
+  expect(foundModule, `Expected module ${name} to not be present in given modules list`).toBeUndefined();
 };
 
 describe('getProdNpmModules', () => {
@@ -21,10 +21,11 @@ describe('getProdNpmModules', () => {
     });
   });
 
-  it('Should have commander, minimatch and nodemon as the only dependencies', async () => {
-    const expectedDeps = ['commander', 'minimatch', 'nodemon', '@tjsr/package-json-utils'];
+  it('Should have commander and @tjsr/package-json-utils as the only dependencies', async () => {
+    const expectedDeps = ['commander', '@tjsr/package-json-utils'];
     const packageModules = await getProdNpmModules();
-    expect(packageModules.length).toBe(expectedDeps.length);
+    expect(packageModules.length, `Has modules ${packageModules.map(m => m.name).join(', ')}`)
+      .toBe(expectedDeps.length);
 
     expectedDeps.forEach((dep) => {
       expectModule(packageModules, dep);
@@ -46,8 +47,7 @@ describe('getDevNpmModules', () => {
     expect(devModules.length).toBeGreaterThan(0);
 
     expectModuleNotPresent(devModules, 'commander');
-    expectModuleNotPresent(devModules, 'minimatch');
-    expectModuleNotPresent(devModules, 'nodemon');
+    expectModuleNotPresent(devModules, '@tjsr/package-json-utils');
   });
 
   test('should return an array of NpmModule objects with isDevDependency set to true', () => {
@@ -68,8 +68,7 @@ describe('getNpmModules', () => {
 
   test('should return an array of NpmModule objects with isDevDependency set to false', () => {
     expectModule(packageModules, 'commander', false);
-    expectModule(packageModules, 'minimatch', false);
-    expectModule(packageModules, 'nodemon', false);
+    expectModule(packageModules, '@tjsr/package-json-utils', false);
   });
 
   test('should return an array of NpmModule objects with isDevDependency set to true', () => {
@@ -86,8 +85,7 @@ describe('devOnly getNpmModules', () => {
 
   test('Should only return dev modules with devOnly param passed as true', () => {
     expectModuleNotPresent(packageModules, 'commander');
-    expectModuleNotPresent(packageModules, 'minimatch');
-    expectModuleNotPresent(packageModules, 'nodemon');
+    expectModuleNotPresent(packageModules, '@tjsr/package-json-utils');
 
     expectModule(packageModules, 'vitest', true);
     expectModule(packageModules, 'typescript', true);
