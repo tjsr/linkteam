@@ -51,7 +51,7 @@
     "nodemon": "^3.1.11",
     "rimraf": "^6.1.0",
     "typescript": "^5.9.3",
-    "vitest": "^3.0.4"
+    "vitest": "^4.0.9"
   },
   "overrides": {
     "flat-cache": "^5.0.0",
