@@ -1,5 +1,5 @@
 import { ExecException } from 'node:child_process';
-import { TaskContext } from 'vitest';
+import { TestContext } from 'vitest';
 import { getCommandOutputPromise } from "./execUtils.js";
 
 let stdoutData: string;
@@ -23,7 +23,7 @@ describe('getCommandOutputPromise', { concurrent: false }, () => {
     });
   });
 
-  beforeEach((context: TaskContext) => {
+  beforeEach((context: TestContext) => {
     stdoutData = context.task.name + "-stdout";
     stderrData = context.task.name + 'err here';
   });
@@ -33,7 +33,7 @@ describe('getCommandOutputPromise', { concurrent: false }, () => {
   });
 
   test('Should return a string from a promise when a command returns a positive termination code.',
-    async (context: TaskContext) => {
+    async (context: TestContext) => {
       const commandString = 'npm ls --json --omit=dev';
 
       stdoutData = context.task.name + "-stdout";
