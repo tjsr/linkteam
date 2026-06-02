@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@tjsr/package-json-utils": "^0.0.7",
-    "commander": "^14.0.0"
+    "commander": "^15.0.0"
   },
   "bundleDependencies": [
     "@tjsr/package-json-utils"
