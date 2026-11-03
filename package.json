@@ -15,7 +15,7 @@
   "scripts": {
     "pretest": "npm run build",
     "test": "vitest --run && npm run lint",
-    "lint": "eslint --config eslint.config.mjs",
+    "lint": "node scripts/check-lint-toolchain.cjs && eslint --config eslint.config.mjs",
     "build": "tsc",
     "clean": "rimraf dist",
     "start": "node index.js",
@@ -57,7 +57,10 @@
   },
   "overrides": {
     "flat-cache": "^5.0.0",
-    "file-entry-cache": "^6.0.1"
+    "file-entry-cache": "^6.0.1",
+    "ts-api-utils": {
+      "typescript": "~6.0.3"
+    }
   },
   "optionalDependencies": {
     "nodemon": "^3.1.3"
