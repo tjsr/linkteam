@@ -1,5 +1,7 @@
 import { ExecException } from 'node:child_process';
+
 import { TestContext } from 'vitest';
+
 import { getCommandOutputPromise } from "./execUtils.js";
 
 let stdoutData: string;

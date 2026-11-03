@@ -1,5 +1,6 @@
-import { hasValue } from "./params.js";
 import { minimatch } from "minimatch";
+
+import { hasValue } from "./params.js";
 
 export const matchesOwner = (module: string, owners: string|string[]|undefined): boolean => {
   if (typeof owners === 'string') {
