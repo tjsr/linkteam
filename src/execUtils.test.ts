@@ -8,6 +8,14 @@ let stdoutData: string;
 let stderrData: string;
 let errorData: ExecException | null;
 
+vi.mock('child_process', () => {
+  return {
+    exec: vi.fn().mockImplementation((_commandString, callback) => {
+      callback(errorData, stdoutData, stderrData);
+    }),
+  };
+});
+
 describe('getCommandOutputPromise', { concurrent: false }, () => {
   beforeAll(() => {
     errorData = {
@@ -15,14 +23,6 @@ describe('getCommandOutputPromise', { concurrent: false }, () => {
       message: 'Failure Occurred',
       name: 'TestFailure',
     };
-
-    vi.mock('child_process', () => {
-      return {
-        exec: vi.fn().mockImplementation((_commandString, callback) => {
-          callback(errorData, stdoutData, stderrData);
-        }),
-      };
-    });
   });
 
   beforeEach((context: TestContext) => {
