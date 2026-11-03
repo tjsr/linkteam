@@ -11,7 +11,7 @@ const lintCompilerPath = sharedRequire.resolve('typescript');
 const lintVersion = sharedRequire('typescript').version;
 const [major, minor] = lintVersion.split('.').map(Number);
 
-assert.ok(major >= 4 && (major < 6 || (major === 6 && minor === 0)),
+assert.ok((major === 4 && minor >= 8) || major === 5 || (major === 6 && minor === 0),
   `Lint requires a compiler supported by typescript-eslint; found ${lintVersion}`);
 for (const lintRequire of [parserRequire, estreeRequire, apiRequire]) {
   assert.equal(lintRequire.resolve('typescript'), lintCompilerPath,
