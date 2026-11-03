@@ -47,10 +47,12 @@
     "@types/minimatch": "^6.0.0",
     "@types/node": "^24.10.1",
     "eslint": "^10.8.0",
+    "globals": "^17.14.0",
     "minimatch": "^11.0.3",
     "nodemon": "^3.1.11",
     "rimraf": "^6.1.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.1",
     "vitest": "^4.0.9"
   },
   "overrides": {
