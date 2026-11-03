@@ -1,8 +1,9 @@
-import { CheckedModule } from "./matchModules.js";
 import { execSync } from "child_process";
-import { getCommandOutputPromise } from "./execUtils.js";
-import { isLinkedModule } from "./checks.js";
 import v8 from 'v8';
+
+import { isLinkedModule } from "./checks.js";
+import { getCommandOutputPromise } from "./execUtils.js";
+import { CheckedModule } from "./matchModules.js";
 
 const stripQuotes = (str: string) => str?.replace(/^"|"$/g, '');
 
