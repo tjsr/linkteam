@@ -1,5 +1,9 @@
 #! node
 
+import { findPackageJson, getVersionFromPackageJson } from "@tjsr/package-json-utils";
+import { program } from "commander";
+
+import { includeModule } from "./checks.js";
 import {
   NpmModule,
   callNpmLink,
@@ -7,11 +11,7 @@ import {
   getNpmModules,
   getProdNpmModules
 } from "./npm.js";
-import { findPackageJson, getVersionFromPackageJson } from "@tjsr/package-json-utils";
-
 import { hasMatchParams } from "./params.js";
-import { includeModule } from "./checks.js";
-import { program } from "commander";
 
 const linkIntentMessage = (
   owners: string[]|undefined,

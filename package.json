@@ -15,7 +15,7 @@
   "scripts": {
     "pretest": "npm run build",
     "test": "vitest --run && npm run lint",
-    "lint": "eslint --config eslint.config.mjs",
+    "lint": "node scripts/check-lint-toolchain.cjs && eslint --config eslint.config.mjs",
     "build": "tsc",
     "clean": "rimraf dist",
     "start": "node index.js",
@@ -47,15 +47,20 @@
     "@types/minimatch": "^6.0.0",
     "@types/node": "^24.10.1",
     "eslint": "^10.8.0",
+    "eslint-plugin-import-x": "^4.17.1",
+    "globals": "^17.14.0",
     "minimatch": "^11.0.3",
     "nodemon": "^3.1.11",
     "rimraf": "^6.1.0",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.9"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
   },
   "overrides": {
     "flat-cache": "^5.0.0",
-    "file-entry-cache": "^6.0.1"
+    "file-entry-cache": "^6.0.1",
+    "ts-api-utils": {
+      "typescript": "~6.0.3"
+    }
   },
   "optionalDependencies": {
     "nodemon": "^3.1.3"
